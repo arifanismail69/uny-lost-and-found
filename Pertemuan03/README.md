@@ -14,7 +14,7 @@
 ## Tautan
 
 - Prototipe klik: `prototipe/index.html` (buka lewat server lokal, lihat di bawah)
-- Repositori: (isi tautan repositori GitHub)
+- Repositori: https://github.com/arifanismail69/uny-lost-and-found
 - Desain: wireframe berupa gambar vektor di dalam `05-wireframe-desktop.pdf` dan `06-wireframe-mobile.pdf`
 
 ## Daftar Artefak
