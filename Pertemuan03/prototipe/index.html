@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototipe UNY Lost and Found</title>
+<style>
+:root{--pri:#1d4ed8;--pri-d:#1e40af;--pri-s:#dbeafe;--tx:#111827;--mu:#4b5563;--bg:#f3f4f6;--sf:#fff;--bd:#d1d5db;--ok:#166534;--oks:#dcfce7;--wt:#92400e;--wts:#fef3c7;--no:#b91c1c;--nos:#fee2e2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,Arial,sans-serif;color:var(--tx);background:var(--bg);line-height:1.5}
+a{color:var(--pri)}h1{font-size:1.6rem;margin:0 0 6px}h2{font-size:1.15rem;margin:0 0 8px}
+header{background:var(--sf);border-bottom:1px solid var(--bd)}
+header .in{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:700;color:var(--pri);font-size:1.1rem;text-decoration:none}
+nav{display:flex;gap:6px;flex:1;flex-wrap:wrap}nav a{padding:6px 12px;border-radius:18px;text-decoration:none;color:var(--tx);font-size:.95rem}
+nav a.on{background:var(--pri-s);color:var(--pri);font-weight:600}
+.user{font-size:.9rem;color:var(--mu)}.user button{margin-left:8px}
+main{max-width:1100px;margin:0 auto;padding:24px 16px 90px}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(4,1fr)}
+.row{display:grid;gap:12px;grid-template-columns:2fr 1fr 1fr 1fr auto;align-items:end}
+.two{display:grid;gap:16px;grid-template-columns:1fr 1fr}.split{display:grid;gap:20px;grid-template-columns:1fr 1fr;align-items:start}
+.field{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}.field label{font-weight:600;font-size:.9rem}
+input,select,textarea{font:inherit;padding:9px 10px;border:1px solid var(--bd);border-radius:6px;background:#fff;width:100%;min-height:42px}
+textarea{min-height:90px;resize:vertical}.err-m{display:none;color:var(--no);font-size:.8rem;font-weight:600}
+.has-err input,.has-err select,.has-err textarea{border:2px solid var(--no)}.has-err .err-m{display:block}.hint{font-size:.8rem;color:var(--mu)}
+button,.btn{font:inherit;font-weight:600;border-radius:6px;padding:9px 18px;min-height:42px;cursor:pointer;border:2px solid var(--pri);background:var(--pri);color:#fff;text-decoration:none;display:inline-block;text-align:center}
+.btn2{background:#fff;color:var(--pri)}.btnd{background:#fff;color:var(--no);border-color:var(--no)}
+button:disabled{background:#e5e7eb;color:var(--mu);border-color:#d1d5db;cursor:not-allowed}
+.badge{display:inline-block;padding:1px 10px;border-radius:12px;font-size:.78rem;font-weight:700;border:1px solid currentColor}
+.ok{background:var(--oks);color:var(--ok)}.wt{background:var(--wts);color:var(--wt)}.no{background:var(--nos);color:var(--no)}.gr{background:#e5e7eb;color:var(--mu)}
+.alert{padding:10px 14px;border-radius:6px;border:1px solid;margin-bottom:12px}.alert.ok{border-color:var(--ok)}.alert.wt{border-color:var(--wt)}.alert.no{border-color:var(--no)}
+.photo{background:#e5e7eb;border:1px solid var(--bd);border-radius:6px;height:120px;display:flex;align-items:center;justify-content:center;color:var(--mu);font-size:.85rem}
+.chip{display:inline-block;background:var(--pri-s);color:var(--pri);border:1px solid var(--pri);border-radius:16px;padding:2px 12px;font-size:.85rem;margin:0 6px 6px 0}
+.empty{text-align:center;padding:32px 16px;border:2px dashed var(--bd);border-radius:10px;background:#fff}
+.mu{color:var(--mu)}.sm{font-size:.85rem}.stack>*+*{margin-top:12px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{text-align:left;padding:8px;border-bottom:1px solid #e5e7eb;vertical-align:top}th{color:var(--mu);font-size:.8rem}
+.li{display:block;width:100%;text-align:left;background:#fff;color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:10px;margin-bottom:8px;font-weight:400}
+.li.sel{border:2px solid var(--pri);background:var(--pri-s)}.li b{display:block}
+.demo{background:var(--wts);border:1px solid #d97706;border-radius:6px;padding:8px 12px;font-size:.85rem;margin-bottom:16px}
+@media(max-width:900px){.grid,.grid4{grid-template-columns:1fr 1fr}.row{grid-template-columns:1fr 1fr}.row .btn,.row button{grid-column:1/-1}.split{grid-template-columns:1fr}}
+@media(max-width:600px){.grid,.grid4,.two,.row{grid-template-columns:1fr}
+ nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--bd);justify-content:space-around;z-index:5;padding:6px 0;flex:none}
+ nav a{font-size:.8rem;padding:8px 6px;min-height:44px}header .in{padding:8px 16px}.actions button,.actions .btn{width:100%}table{font-size:.85rem}}
+</style>
+</head>
+<body>
+<header><div class="in"><a class="brand" href="#/beranda">UNY Lost and Found</a><nav id="nav"></nav><div class="user" id="user"></div></div></header>
+<main id="app"></main>
+
+<script>
+/* ===== Data simulasi (di memori; muat ulang halaman = data kembali awal) ===== */
+var KATEGORI=['Dompet','Tas','Botol','Kunci','Payung','Elektronik','Lainnya'];
+var LOKASI=['Perpustakaan Pusat','Perpustakaan lt.1','Perpustakaan lt.2','Kantin FT','Parkir Barat','Masjid Kampus','Gedung Kuliah Bersama','Ruang Dosen'];
+var S={user:null,seq:{LP:10,KL:4},
+ lap:[
+  {kode:'LP-001',jenis:'Temuan',nama:'Dompet kulit hitam',kat:'Dompet',lok:'Perpustakaan Pusat',tgl:'2026-11-18',ciri:'Warna hitam, ada gantungan kunci kecil.',rah:'Foto keluarga di slot kartu dan dua lembar uang Rp50.000.',dit:'Pos Satpam Gedung FT',status:'Terverifikasi',pemilik:'raka'},
+  {kode:'LP-002',jenis:'Temuan',nama:'Dompet cokelat',kat:'Dompet',lok:'Perpustakaan lt.1',tgl:'2026-11-17',ciri:'Cokelat tua, ada resleting.',rah:'Kartu mahasiswa fakultas lain di dalamnya.',dit:'Pos Satpam Gedung FT',status:'Terverifikasi',pemilik:'raka'},
+  {kode:'LP-003',jenis:'Temuan',nama:'Botol minum biru',kat:'Botol',lok:'Kantin FT',tgl:'2026-11-17',ciri:'Biru tua, stiker bintang.',rah:'Ada nama inisial di bawah botol.',dit:'Pos Satpam Gedung FT',status:'Terverifikasi',pemilik:'raka'},
+  {kode:'LP-004',jenis:'Temuan',nama:'Kunci motor Honda',kat:'Kunci',lok:'Parkir Barat',tgl:'2026-11-16',ciri:'Gantungan karakter kucing.',rah:'Ada dua kunci cadangan.',dit:'Pos Parkir Barat',status:'Terverifikasi',pemilik:'raka'},
+  {kode:'LP-005',jenis:'Temuan',nama:'Payung lipat hijau',kat:'Payung',lok:'Masjid Kampus',tgl:'2026-11-16',ciri:'Hijau tua, gagang hitam.',rah:'Ada tulisan tangan di sarungnya.',dit:'Sekretariat Masjid',status:'Terverifikasi',pemilik:'raka'},
+  {kode:'LP-006',jenis:'Temuan',nama:'Dompet hitam polos',kat:'Dompet',lok:'Perpustakaan lt.2',tgl:'2026-11-10',ciri:'Hitam polos.',rah:'Berisi kartu ATM bank tertentu.',dit:'Pos Satpam Gedung FT',status:'Terverifikasi',pemilik:'raka'},
+  {kode:'LP-007',jenis:'Temuan',nama:'Tas ransel biru',kat:'Tas',lok:'Gedung Kuliah Bersama',tgl:'2026-11-08',ciri:'Biru dongker.',rah:'Buku catatan bertanda nama.',dit:'Pos Satpam GKB',status:'Dikembalikan',pemilik:'raka'},
+  {kode:'LP-008',jenis:'Temuan',nama:'Laptop abu-abu',kat:'Elektronik',lok:'Ruang Dosen',tgl:'2026-11-19',ciri:'Abu-abu, stiker kampus.',rah:'Wallpaper bergambar pantai.',dit:'Ruang Dosen',status:'Menunggu verifikasi',pemilik:'raka'},
+  {kode:'LP-009',jenis:'Temuan',nama:'Kunci loker',kat:'Kunci',lok:'Perpustakaan lt.1',tgl:'2026-11-12',ciri:'Kunci kecil nomor 14.',rah:'',dit:'Perpustakaan',status:'Ditolak',alasan:'Foto tidak jelas',pemilik:'dina'},
+  {kode:'LP-010',jenis:'Hilang',nama:'Tas ransel biru',kat:'Tas',lok:'Gedung Kuliah Bersama',tgl:'2026-11-08',ciri:'Biru dongker, ada gantungan.',rah:'Buku catatan bertanda nama.',dit:'',status:'Terverifikasi',pemilik:'dina'}],
+ kl:[
+  {kode:'KL-001',lap:'LP-005',pemilik:'dina',bukti:'Payung punya saya, warna hijau.',status:'Ditolak',alasan:'Ciri tidak sesuai'},
+  {kode:'KL-002',lap:'LP-001',pemilik:'rani',bukti:'Dompet saya, ada foto keluarga dan uang lima puluh ribu dua lembar.',status:'Menunggu'},
+  {kode:'KL-003',lap:'LP-007',pemilik:'dina',bukti:'Ada buku catatan bertanda nama saya.',status:'Disetujui'},
+  {kode:'KL-004',lap:'LP-006',pemilik:'rani',bukti:'Berisi kartu ATM bank tertentu.',status:'Disetujui'}]};
+var AKUN={'dina@mhs.uny.ac.id':{p:'dina123',peran:'pengguna',nama:'Dina',id:'dina'},'slamet@uny.ac.id':{p:'petugas123',peran:'petugas',nama:'Pak Slamet',id:'slamet'}};
+
+/* ===== Util ===== */
+function esc(s){var d=document.createElement('div');d.textContent=String(s==null?'':s);return d.innerHTML}
+function $(id){return document.getElementById(id)}
+function lap(k){return S.lap.filter(function(x){return x.kode===k})[0]}
+function klaimDisetujui(k){return S.kl.some(function(c){return c.lap===k&&c.status==='Disetujui'})}
+function badge(s){var m={'Menunggu':'wt','Menunggu verifikasi':'wt','Terverifikasi':'ok','Disetujui':'ok','Dikembalikan':'ok','Ditolak':'no','Dapat diklaim':'ok','Sudah diklaim':'gr'};return '<span class="badge '+(m[s]||'gr')+'">'+esc(s)+'</span>'}
+function fe(id,msg){return '<div class="field" id="f-'+id+'">'}
+function today(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function setErr(id,on,msg){var f=$('f-'+id);if(!f)return;f.classList.toggle('has-err',!!on);if(msg){f.querySelector('.err-m').textContent=msg}}
+function opts(arr,ph,sel){return '<option value="">'+ph+'</option>'+arr.map(function(a){return '<option'+(a===sel?' selected':'')+'>'+esc(a)+'</option>'}).join('')}
+function publik(){return S.lap.filter(function(x){return x.jenis==='Temuan'&&x.status==='Terverifikasi'})} // Dikembalikan & Menunggu tidak tampil (AC-04.3, AC-04.5)
+function go(h){location.hash=h}
+function wajibMasuk(peran,next){
+  if(!S.user){S.next=next;go('#/masuk');return false}
+  if(peran&&S.user.peran!==peran){go('#/tidak-diizinkan');return false}
+  return true}
+
+/* ===== Header ===== */
+function head(){
+  var a=location.hash.split('?')[0],items=S.user&&S.user.peran==='petugas'?[['#/admin','Laporan dan Klaim']]:[['#/beranda','Beranda'],['#/hasil','Cari Barang'],['#/lapor','Lapor'],['#/riwayat','Riwayat']];
+  $('nav').innerHTML=items.map(function(i){return '<a href="'+i[0]+'"'+(a===i[0]||(i[0]==='#/hasil'&&a.indexOf('#/detail')===0)?' class="on"':'')+'>'+i[1]+'</a>'}).join('');
+  $('user').innerHTML=S.user?esc(S.user.nama)+' ('+S.user.peran+') <button class="btn2" onclick="keluar()">Keluar</button>':'<a href="#/masuk">Masuk</a>'}
+function keluar(){S.user=null;go('#/beranda');route()}
+
+/* ===== Layar ===== */
+var V={};
+V.masuk=function(){
+  return '<div class="card stack" style="max-width:440px;margin:0 auto"><h1>Masuk</h1>'+(S.next?'<div class="alert wt">Masuk dulu untuk melanjutkan.</div>':'')+
+  '<div class="demo">Prototipe: klik tombol untuk mengisi akun contoh.<br><button class="btn2" onclick="isi(0)">Isi akun pengguna</button> <button class="btn2" onclick="isi(1)">Isi akun petugas</button></div>'+
+  '<div id="galat" class="alert no" hidden></div>'+
+  '<form id="fm" novalidate><div class="field" id="f-em"><label for="em">Email</label><input id="em" type="email"><span class="err-m">Email wajib diisi</span></div>'+
+  '<div class="field" id="f-pw"><label for="pw">Kata sandi</label><input id="pw" type="password"><span class="err-m">Kata sandi wajib diisi</span></div>'+
+  '<button type="submit">Masuk</button></form></div>'};
+V.masuk.init=function(){
+  $('fm').onsubmit=function(e){e.preventDefault();var em=$('em').value.trim(),pw=$('pw').value;setErr('em',!em);setErr('pw',!pw);$('galat').hidden=true;if(!em||!pw)return;
+    var a=AKUN[em];if(!a||a.p!==pw){$('galat').hidden=false;$('galat').textContent='Email atau kata sandi salah';return}
+    S.user=a;var n=S.next;S.next=null;if(n&&n.indexOf('#/admin')===0)n=null;go(a.peran==='petugas'?'#/admin':(n||'#/beranda'))}};
+function isi(i){var k=Object.keys(AKUN)[i];$('em').value=k;$('pw').value=AKUN[k].p}
+
+V.beranda=function(){
+  var baru=publik().slice(0,4);
+  return '<h1>Cari barang yang hilang atau ditemukan</h1><p class="mu">Hanya barang yang sudah diverifikasi petugas yang ditampilkan.</p>'+
+  '<form class="card row" id="fc"><div class="field"><label for="q">Kata kunci</label><input id="q" placeholder="Contoh: dompet hitam"></div>'+
+  '<div class="field"><label for="k">Kategori</label><select id="k">'+opts(KATEGORI,'Semua kategori')+'</select></div>'+
+  '<div class="field"><label for="l">Lokasi</label><select id="l">'+opts(LOKASI,'Semua lokasi')+'</select></div>'+
+  '<div class="field"><label for="t">Sejak tanggal</label><input id="t" type="date"></div><div class="field"><button type="submit">Cari Barang</button></div></form>'+
+  '<div class="two" style="margin:16px 0"><div class="card"><h2>Kehilangan barang?</h2><p class="mu sm">Buat laporan agar petugas dan penemu dapat mencocokkannya.</p><a class="btn btn2" href="#/lapor?jenis=Hilang">Lapor Kehilangan</a></div>'+
+  '<div class="card"><h2>Menemukan barang?</h2><p class="mu sm">Laporkan temuan agar pemiliknya dapat mengklaim.</p><a class="btn btn2" href="#/lapor?jenis=Temuan">Lapor Temuan</a></div></div>'+
+  '<h2>Barang temuan terbaru</h2><div class="grid grid4">'+baru.map(kartu).join('')+'</div>'};
+V.beranda.init=function(){$('fc').onsubmit=function(e){e.preventDefault();var p=[];[['q','q'],['k','kat'],['l','lok'],['t','tgl']].forEach(function(x){var v=$(x[0]).value.trim();if(v)p.push(x[1]+'='+encodeURIComponent(v))});go('#/hasil'+(p.length?'?'+p.join('&'):''))}};
+function kartu(x){
+  var klm=klaimDisetujui(x.kode);
+  return '<div class="card stack"><div class="photo">Foto barang</div><div><b>'+esc(x.nama)+'</b><div class="mu sm">'+esc(x.lok)+' | '+esc(x.tgl)+'</div></div>'+badge(klm?'Sudah diklaim':'Dapat diklaim')+'<div><a class="btn btn2" style="width:100%" href="#/detail/'+x.kode+'">Lihat Detail</a></div></div>'}
+function qs(){var o={},s=location.hash.split('?')[1]||'';s.split('&').forEach(function(p){if(p){var a=p.split('=');o[a[0]]=decodeURIComponent(a[1]||'')}});return o}
+
+V.hasil=function(){
+  var q=qs(),r=publik().filter(function(x){
+    var t=(x.nama+' '+x.ciri+' '+x.kat).toLowerCase();
+    return (!q.q||t.indexOf(q.q.toLowerCase())>-1)&&(!q.kat||x.kat===q.kat)&&(!q.lok||x.lok===q.lok)&&(!q.tgl||x.tgl>=q.tgl)});
+  var ch=[];if(q.q)ch.push('Kata kunci: '+q.q);if(q.kat)ch.push('Kategori: '+q.kat);if(q.lok)ch.push('Lokasi: '+q.lok);if(q.tgl)ch.push('Sejak: '+q.tgl);
+  var h='<h1>Hasil pencarian</h1><p class="mu" role="status">'+r.length+' barang ditemukan</p>'+(ch.length?'<div>'+ch.map(function(c){return '<span class="chip">'+esc(c)+'</span>'}).join('')+' <a href="#/hasil">Hapus filter</a></div>':'');
+  if(!r.length)return h+'<div class="empty"><h2>Tidak ada barang yang cocok</h2><p class="mu">Coba ubah kata kunci atau kurangi filter.</p><a class="btn" href="#/hasil">Hapus filter</a> <a class="btn btn2" href="#/beranda">Ubah pencarian</a></div>';
+  r.sort(function(a,b){return (klaimDisetujui(a.kode)?1:0)-(klaimDisetujui(b.kode)?1:0)}); // barang yang masih bisa diklaim tampil lebih dulu
+  return h+'<div class="grid">'+r.map(kartu).join('')+'</div><p style="margin-top:16px"><a href="#/beranda">Ubah pencarian</a></p>'};
+
+V.detail=function(k){
+  var x=lap(k);
+  if(!x||x.jenis!=='Temuan'||x.status==='Menunggu verifikasi'||x.status==='Ditolak'||x.status==='Dikembalikan')return '<div class="empty"><h2>Barang tidak ditemukan</h2><p class="mu">Barang tidak ada atau sudah tidak ditampilkan.</p><a class="btn" href="#/hasil">Kembali ke hasil</a></div>';
+  var klm=klaimDisetujui(k);
+  return '<p class="sm"><a href="#/hasil">Cari Barang</a> / '+esc(x.nama)+'</p><div class="split"><div class="stack"><div class="photo" style="height:240px">Foto barang</div>'+
+  '<h1>'+esc(x.nama)+' '+badge(klm?'Sudah diklaim':'Dapat diklaim')+'</h1><div>Kategori: '+esc(x.kat)+'<br>Ditemukan di: '+esc(x.lok)+'<br>Tanggal: '+esc(x.tgl)+'<br><span class="mu">Tempat penitipan: tampil setelah klaim disetujui</span><br>Ciri umum: '+esc(x.ciri)+'</div>'+
+  '<div class="alert wt">Ciri rahasia disembunyikan untuk verifikasi klaim oleh petugas.</div></div>'+
+  '<div class="card stack" id="panel"><h2>Ajukan Klaim</h2>'+(klm?'<div class="alert no">Barang sudah diklaim. Klaim baru tidak dapat diajukan.</div><button disabled>Barang sudah diklaim</button>':
+  '<p class="mu sm">Jelaskan ciri yang hanya diketahui pemilik barang.</p><div id="galat" class="alert no" hidden></div><form id="fk" novalidate><div class="field" id="f-bk"><label for="bk">Ciri pembuktian *</label><textarea id="bk" placeholder="Contoh: isi dompet, bekas goresan, foto di kartu"></textarea><span class="err-m">Ciri pembuktian wajib diisi</span></div>'+
+  '<div class="field"><label for="ct">Catatan tambahan (opsional)</label><textarea id="ct" style="min-height:60px"></textarea></div><div class="actions"><button type="submit">Kirim Klaim</button><a class="btn btn2" href="#/hasil">Batal</a></div></form>')+'</div></div>'};
+V.detail.init=function(k){var f=$('fk');if(!f)return;if(S.draft&&S.draft.k===k){$('bk').value=S.draft.b;S.draft=null}f.onsubmit=function(e){e.preventDefault();
+  if(!S.user){S.next='#/detail/'+k;S.draft={k:k,b:$('bk').value};go('#/masuk');return}
+  var b=$('bk').value.trim();setErr('bk',!b);$('galat').hidden=true;if(!b)return;
+  if(S.kl.some(function(c){return c.lap===k&&c.pemilik===S.user.id&&c.status==='Menunggu'})){$('galat').hidden=false;$('galat').textContent='Anda sudah mengajukan klaim untuk barang ini. Tunggu keputusan petugas.';return}
+  var kode='KL-'+('00'+(++S.seq.KL)).slice(-3);S.kl.push({kode:kode,lap:k,pemilik:S.user.id,bukti:b,status:'Menunggu'});S.flash='Klaim '+kode+' terkirim. Pantau statusnya di Riwayat.';go('#/riwayat')}};
+
+V.lapor=function(){
+  var j=qs().jenis==='Hilang'?'Hilang':'Temuan';
+  return '<div class="card stack" style="max-width:760px;margin:0 auto"><h1>Lapor Barang</h1><div id="ok"></div><form id="fl" novalidate>'+
+  '<div class="field"><label>Jenis laporan *</label><div><label><input type="radio" name="j" value="Hilang" style="width:auto;min-height:0"'+(j==='Hilang'?' checked':'')+'> Saya kehilangan barang</label> &nbsp; <label><input type="radio" name="j" value="Temuan" style="width:auto;min-height:0"'+(j==='Temuan'?' checked':'')+'> Saya menemukan barang</label></div></div>'+
+  '<div class="two"><div class="field" id="f-n"><label for="n">Nama barang *</label><input id="n" placeholder="Contoh: Dompet kulit hitam"><span class="err-m">Nama barang wajib diisi</span></div><div class="field" id="f-k"><label for="k">Kategori *</label><select id="k">'+opts(KATEGORI,'Pilih kategori')+'</select><span class="err-m">Pilih kategori</span></div></div>'+
+  '<div class="field" id="f-c"><label for="c">Ciri barang *</label><textarea id="c" placeholder="Warna, merek, ukuran, ciri khas"></textarea><span class="err-m">Ciri barang wajib diisi</span></div>'+
+  '<div class="field"><label for="r">Ciri rahasia (opsional)</label><textarea id="r" style="min-height:60px"></textarea><span class="hint">Hanya terlihat oleh petugas, tidak tampil di halaman publik.</span></div>'+
+  '<div class="two"><div class="field" id="f-l"><label for="l">Lokasi *</label><select id="l">'+opts(LOKASI,'Pilih lokasi')+'</select><span class="err-m">Pilih lokasi</span></div><div class="field" id="f-t"><label for="t">Tanggal *</label><input id="t" type="date"><span class="err-m">Tanggal wajib diisi</span></div></div>'+
+  '<div class="field" id="f-f"><label for="f">Foto barang (JPG/PNG, maks. 2 MB)</label><input id="f" type="file" accept=".jpg,.jpeg,.png"><span class="err-m">Foto harus JPG/PNG dan maksimal 2 MB</span></div>'+
+  '<div class="field" id="f-d"><label for="d">Dititipkan di (khusus temuan) *</label><input id="d" placeholder="Contoh: Pos Satpam Gedung FT"><span class="err-m">Tempat penitipan wajib diisi</span></div>'+
+  '<div class="actions"><button type="submit">Kirim Laporan</button><a class="btn btn2" href="#/beranda">Batal</a></div></form></div>'};
+V.lapor.init=function(){
+  var f=$('fl');function jenis(){return f.j.value}
+  function sinkron(){$('f-d').style.display=jenis()==='Temuan'?'':'none'}
+  [].forEach.call(f.j,function(r){r.onchange=sinkron});sinkron();
+  f.onsubmit=function(e){e.preventDefault();var bad=0;
+    function cek(id,cond,msg){setErr(id,!cond,msg);if(!cond)bad++}
+    cek('n',$('n').value.trim());cek('k',$('k').value);cek('c',$('c').value.trim());cek('l',$('l').value);
+    var t=$('t').value;cek('t',t&&t<=today(),!t?'Tanggal wajib diisi':'Tanggal tidak boleh lebih dari hari ini');
+    var fl=$('f').files[0];cek('f',!fl||(/\.(jpe?g|png)$/i.test(fl.name)&&fl.size<=2097152));
+    if(jenis()==='Temuan')cek('d',$('d').value.trim());else setErr('d',false);
+    if(bad)return;
+    var kode='LP-0'+(++S.seq.LP);
+    S.lap.push({kode:kode,jenis:jenis(),nama:$('n').value.trim(),kat:$('k').value,lok:$('l').value,tgl:t,ciri:$('c').value.trim(),rah:$('r').value.trim(),dit:jenis()==='Temuan'?$('d').value.trim():'',status:'Menunggu verifikasi',pemilik:S.user.id});
+    S.flash='Laporan '+kode+' tersimpan dengan status Menunggu verifikasi.';go('#/riwayat')}};
+
+V.riwayat=function(){
+  var f=S.flash?'<div class="alert ok" role="status">'+esc(S.flash)+'</div>':'';S.flash=null;
+  var ml=S.lap.filter(function(x){return x.pemilik===S.user.id}),mk=S.kl.filter(function(x){return x.pemilik===S.user.id});
+  var tl=ml.length?'<div class="card" style="overflow-x:auto"><table><tr><th>Kode</th><th>Barang</th><th>Jenis</th><th>Tanggal</th><th>Status</th><th>Keterangan</th></tr>'+ml.map(function(x){return '<tr><td>'+x.kode+'</td><td>'+esc(x.nama)+'</td><td>'+x.jenis+'</td><td>'+esc(x.tgl)+'</td><td>'+badge(x.status)+'</td><td class="mu">'+(x.alasan?'Alasan: '+esc(x.alasan):'')+'</td></tr>'}).join('')+'</table></div>':
+   '<div class="empty"><h2>Anda belum membuat laporan</h2><a class="btn btn2" href="#/lapor">Buat Laporan</a></div>';
+  var tk=mk.length?'<div class="card" style="overflow-x:auto"><table><tr><th>Kode</th><th>Barang</th><th>Status</th><th>Keterangan</th></tr>'+mk.map(function(x){var b=lap(x.lap);return '<tr><td>'+x.kode+'</td><td>'+esc(b.nama)+'</td><td>'+badge(x.status)+'</td><td class="mu">'+(x.status==='Ditolak'?'Alasan: '+esc(x.alasan):x.status==='Disetujui'?'Ambil di '+esc(b.dit)+', 08.00-15.00. Bawa kartu identitas.':'Sedang ditinjau petugas')+'</td></tr>'}).join('')+'</table></div>':
+   '<div class="empty"><h2>Anda belum mengajukan klaim</h2><a class="btn btn2" href="#/hasil">Cari Barang</a></div>';
+  return '<h1>Riwayat Saya</h1>'+f+'<h2>Laporan Saya</h2>'+tl+'<h2 style="margin-top:20px">Klaim Saya</h2>'+tk};
+
+var A={sel:null,st:'Menunggu',jn:''};
+function dataAdmin(){
+  var r=[];S.lap.forEach(function(x){r.push({kode:x.kode,tipe:'Laporan',jenis:x.jenis,judul:x.jenis+' - '+x.nama,status:x.status})});
+  S.kl.forEach(function(c){r.push({kode:c.kode,tipe:'Klaim',jenis:'Klaim',judul:'Klaim - '+lap(c.lap).nama,status:c.status})});
+  return r.filter(function(x){return(!A.st||x.status===A.st||(A.st==='Menunggu'&&x.status==='Menunggu verifikasi'))&&(!A.jn||x.jenis===A.jn)})}
+V.admin=function(){
+  var d=dataAdmin(),sel=d.filter(function(x){return x.kode===A.sel})[0];
+  var list=d.length?d.map(function(x){return '<button class="li'+(x.kode===A.sel?' sel':'')+'" data-k="'+x.kode+'"><b>'+x.kode+'</b>'+esc(x.judul)+' '+badge(x.status)+'</button>'}).join(''):'<div class="empty"><p><b>Tidak ada laporan sesuai filter</b></p><button class="btn2" id="hf">Hapus filter</button></div>';
+  var fl=S.flash?'<div class="alert ok" role="status">'+esc(S.flash)+'</div>':'';S.flash=null;
+  return '<h1>Laporan dan Klaim</h1>'+fl+'<div class="split" style="grid-template-columns:1fr 1.6fr"><div class="card"><div class="two"><div class="field"><label for="fs">Status</label><select id="fs">'+['Menunggu','Terverifikasi','Disetujui','Ditolak','Dikembalikan'].map(function(s){return '<option'+(A.st===s?' selected':'')+'>'+s+'</option>'}).join('')+'<option value=""'+(A.st===''?' selected':'')+'>Semua</option></select></div>'+
+  '<div class="field"><label for="fj">Jenis</label><select id="fj"><option value="">Semua</option><option'+(A.jn==='Hilang'?' selected':'')+'>Hilang</option><option'+(A.jn==='Temuan'?' selected':'')+'>Temuan</option><option'+(A.jn==='Klaim'?' selected':'')+'>Klaim</option></select></div></div>'+list+'</div><div class="card" id="dt">'+(sel?detailAdmin(sel):'<p class="mu">Pilih satu baris untuk melihat rincian.</p>')+'</div></div>'};
+function detailAdmin(s){
+  var h='<div id="galat" class="alert no" hidden></div>';
+  if(s.tipe==='Klaim'){var c=S.kl.filter(function(x){return x.kode===s.kode})[0],b=lap(c.lap),blok=klaimDisetujui(b.kode)&&c.status==='Menunggu';
+    return '<h2>Klaim '+c.kode+': '+esc(b.nama)+' '+badge(c.status)+'</h2><p class="mu sm">Diajukan '+esc(c.pemilik)+' | Laporan temuan '+b.kode+'</p><div class="two"><div class="card"><b>Ciri rahasia (laporan temuan)</b><p>'+esc(b.rah||'-')+'</p></div><div class="card"><b>Bukti dari pengklaim</b><p>'+esc(c.bukti)+'</p></div></div>'+
+    (blok?'<div class="alert wt" style="margin-top:12px">Sudah ada klaim lain yang disetujui untuk barang ini. Tombol Setujui dinonaktifkan.</div>':'')+
+    (c.status==='Menunggu'?'<div class="field" id="f-al" style="margin-top:12px"><label for="al">Alasan penolakan *</label><textarea id="al"></textarea><span class="err-m">Alasan wajib diisi</span></div><div class="actions"><button id="ya"'+(blok?' disabled':'')+'>Setujui</button><button class="btnd" id="tl">Tolak</button></div>':(c.alasan?'<p>Alasan: '+esc(c.alasan)+'</p>':'<p class="mu">Keputusan sudah dicatat.</p>'))}
+  var x=lap(s.kode);
+  return '<h2>'+x.kode+': '+esc(x.nama)+' '+badge(x.status)+'</h2><p class="mu sm">'+x.jenis+' | '+esc(x.lok)+' | '+esc(x.tgl)+'</p><div class="card"><b>Ciri</b><p>'+esc(x.ciri)+'</p><b>Ciri rahasia</b><p>'+esc(x.rah||'-')+'</p>'+(x.dit?'<b>Dititipkan di</b><p>'+esc(x.dit)+'</p>':'')+'</div>'+
+    (x.status==='Menunggu verifikasi'?'<div class="field" id="f-al" style="margin-top:12px"><label for="al">Alasan penolakan *</label><textarea id="al"></textarea><span class="err-m">Alasan wajib diisi</span></div><div class="actions"><button id="ya">Setujui</button><button class="btnd" id="tl">Tolak</button></div>':(x.alasan?'<p>Alasan: '+esc(x.alasan)+'</p>':''))}
+V.admin.init=function(){
+  $('fs').onchange=function(){A.st=this.value;A.sel=null;route()};$('fj').onchange=function(){A.jn=this.value;A.sel=null;route()};
+  var hf=$('hf');if(hf)hf.onclick=function(){A.st='';A.jn='';route()};
+  [].forEach.call(document.querySelectorAll('.li'),function(b){b.onclick=function(){A.sel=b.getAttribute('data-k');route()}});
+  var ya=$('ya'),tl=$('tl');if(!ya)return;
+  function ubah(ok){
+    var al=$('al').value.trim();if(!ok&&!al){setErr('al',true);return}
+    var k=A.sel;
+    if(k.indexOf('KL')===0){var c=S.kl.filter(function(x){return x.kode===k})[0];
+      if(ok){if(klaimDisetujui(c.lap)){return}c.status='Disetujui'}else{c.status='Ditolak';c.alasan=al}}
+    else{var x=lap(k);if(ok)x.status='Terverifikasi';else{x.status='Ditolak';x.alasan=al}}
+    S.flash='Keputusan untuk '+k+' tersimpan: '+(ok?(k.indexOf('KL')===0?'Disetujui':'Terverifikasi'):'Ditolak')+'.';
+    A.sel=null;route()}
+  ya.onclick=function(){ubah(true)};tl.onclick=function(){ubah(false)}};
+
+V['tidak-diizinkan']=function(){return '<div class="empty"><h1>Tidak diizinkan</h1><p class="mu">Halaman ini hanya untuk petugas.</p><a class="btn" href="#/beranda">Kembali ke Beranda</a></div>'};
+V.nf=function(){return '<div class="empty"><h1>Halaman tidak ditemukan</h1><p class="mu">Alamat yang Anda buka tidak ada.</p><a class="btn" href="#/beranda">Kembali ke Beranda</a></div>'};
+
+/* ===== Router ===== */
+function route(){
+  var h=location.hash||'#/beranda',p=h.split('?')[0].split('/'),n=p[1]||'beranda',arg=p[2];
+  if(n==='lapor'&&!wajibMasuk(null,h))return;
+  if(n==='riwayat'&&!wajibMasuk('pengguna',h))return;
+  if(n==='admin'&&!wajibMasuk('petugas',h))return;
+  var v=V[n]||V.nf;$('app').innerHTML=v(arg);head();if(v.init)v.init(arg);window.scrollTo(0,0)}
+window.addEventListener('hashchange',route);route();
+</script>
+</body>
+</html>
