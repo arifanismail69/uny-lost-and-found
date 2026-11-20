@@ -14,6 +14,11 @@
 | 10 | Aturan "satu klaim disetujui per barang" diperiksa di tampilan dan di server | AC-09.2; mencegah dilewati lewat permintaan langsung |
 | 11 | Locale `id` dan zona waktu `Asia/Jakarta` | Tanggal berbahasa Indonesia; batas "hari ini" sesuai WIB |
 | 12 | Test fitur `tests/Feature/AntarmukaPertemuan4Test.php` | Bukti uji yang bisa diulang |
+| 13 | Identitas visual UNY: header dan banner biru tua, aksen kuning emas, font Plus Jakarta Sans | Aplikasi terasa sebagai layanan resmi kampus; struktur halaman tetap sama dengan wireframe P3 |
+| 14 | Ilustrasi ikon per kategori sebagai pengganti foto barang | Foto asli baru tersedia setelah unggah disimpan (P5); kartu tetap mudah dibedakan |
+| 15 | Alur dijelaskan di halaman: "Cara barang kembali" di beranda dan langkah klaim di detail | Mengurangi kebingungan pengguna baru tentang apa yang terjadi setelah klaim |
+| 16 | Tabel Riwayat berubah menjadi kartu di layar ≤ 640 px | Tidak perlu menggeser tabel ke samping di ponsel, sesuai wireframe mobile P3 |
+| 17 | Laravel Boost (diminta `aplikasi/CLAUDE.md`) belum dipasang | Pemasangan ditolak oleh pengaturan izin di sesi pengerjaan; tidak memengaruhi aplikasi |
 
 ## Route dan pemetaan ke Pertemuan 3
 

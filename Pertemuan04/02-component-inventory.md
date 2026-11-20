@@ -11,7 +11,9 @@ Komponen dibuat sebagai Blade anonymous component di `aplikasi/resources/views/c
 | ItemCard | `item-card.blade.php` | `item`, `selected` | normal, selected, sudah diklaim (tombol nonaktif) | Beranda, Hasil, halaman uji |
 | StatusBadge | `status-badge.blade.php` | `status` | Menunggu, Menunggu verifikasi, Terverifikasi, Disetujui, Ditolak, Dikembalikan, Sudah diklaim | Kartu, Detail, Riwayat, Petugas |
 | Alert | `alert.blade.php` | `type` (success/warning/danger) | 3 varian | Detail, Lapor, Petugas, Layout |
-| EmptyState | `empty-state.blade.php` | `title`, `text`, slot aksi | hasil kosong, belum ada laporan/klaim, tidak ditemukan | Hasil, Riwayat, Petugas, 404 |
+| EmptyState | `empty-state.blade.php` | `title`, `text`, `icon`, slot aksi | hasil kosong, belum ada laporan/klaim, belum memilih item, tidak ditemukan | Hasil, Riwayat, Petugas, 404 |
+| Icon | `icon.blade.php` | `name`, `size` | 23 ikon garis (SVG inline, tanpa pustaka luar) | Navbar, kartu, form, alert |
+| ItemPhoto | `item-photo.blade.php` | `kategori`, `large` | ilustrasi berwarna per kategori; redup saat barang sudah diklaim | ItemCard, Detail |
 
 ## Kriteria pemeriksaan (sesuai modul)
 

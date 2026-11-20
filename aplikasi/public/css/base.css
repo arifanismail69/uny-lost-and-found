@@ -2,15 +2,18 @@
 body {
   margin: 0; font-family: var(--font-family); font-size: var(--font-size-body);
   line-height: var(--line-height); color: var(--color-text); background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
 }
-h1 { font-size: var(--font-size-heading); line-height: 1.25; margin: 0 0 var(--space-2); }
-h2 { font-size: var(--font-size-subheading); margin: 0 0 var(--space-3); }
+h1 { font-size: var(--font-size-heading); line-height: 1.2; margin: 0 0 var(--space-2); letter-spacing: -0.01em; }
+h2 { font-size: var(--font-size-subheading); line-height: 1.3; margin: 0 0 var(--space-3); }
+h3 { margin: 0; }
 p { margin: 0 0 var(--space-3); }
-a { color: var(--color-primary); }
+a { color: var(--color-primary); text-underline-offset: 3px; }
 :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; box-shadow: var(--focus-ring); }
+.icon { flex: none; vertical-align: middle; }
 .container { width: 100%; max-width: var(--container-max); margin: 0 auto; padding: 0 var(--space-4); }
 .text-muted { color: var(--color-text-muted); }
 .caption { font-size: var(--font-size-caption); color: var(--color-text-muted); }
-.skip-link { position: absolute; left: var(--space-3); top: -60px; background: var(--color-primary); color: #fff; padding: var(--space-2) var(--space-3); border-radius: var(--radius-control); z-index: 20; }
+.skip-link { position: absolute; left: var(--space-3); top: -60px; background: var(--color-accent); color: var(--color-on-accent); padding: var(--space-2) var(--space-3); border-radius: var(--radius-control); z-index: 30; font-weight: 700; }
 .skip-link:focus { top: var(--space-2); }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
