@@ -11,7 +11,7 @@ Lingkungan: Laravel 13, PHP 8.5, `php artisan serve`. Diuji pada lebar desktop (
 | 5 | State kosong, error, dan sukses dapat ditampilkan | Sudah | Pencarian tanpa hasil; galat klaim/lapor/tolak; pesan sukses setelah kirim |
 | 6 | Desktop dan mobile tidak terpotong atau meluber | Sudah | Lebar 390 px: tidak ada scroll horizontal di 10 halaman/state yang diperiksa |
 | 7 | Tombol dan field memiliki label yang jelas | Sudah | Semua field memakai `<label for>`; tombol berlabel kata kerja |
-| 8 | Kontras teks dan latar dapat dibaca | Sudah (perkiraan) | Hitungan manual pasangan warna token di atas 4.5:1; belum diuji dengan alat |
+| 8 | Kontras teks dan latar dapat dibaca | Sudah | Diukur di browser dengan rumus WCAG: semua pasangan utama 7.07-12.10 : 1 (lihat `01-design-tokens.md`) |
 | 9 | Kode komponen tidak diduplikasi tanpa alasan | Sudah | 8 komponen Blade, lihat `02-component-inventory.md` |
 | 10 | Perubahan sudah di-commit dan didorong ke repositori | Belum | Dilakukan pemilik proyek pada branch `feature/ui-pertemuan-4` |
 

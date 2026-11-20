@@ -1,33 +1,42 @@
-/* Design tokens - UNY Lost and Found (Pertemuan 4)
-   Sumber nilai visual satu-satunya. Diturunkan dari wireframe Pertemuan 3
-   (abu-abu + satu warna aksen biru, status hijau/kuning/merah). */
+/* Design tokens - UNY Lost and Found
+   Versi "nuansa UNY": biru tua dan kuning emas sebagai identitas kampus.
+   Sumber nilai visual satu-satunya; file CSS lain hanya memakai var(--...). */
 :root {
-  /* Warna */
-  --color-primary: #1d4ed8;
-  --color-primary-hover: #1e40af;
-  --color-primary-soft: #dbeafe;
-  --color-admin: #1e3a8a;          /* header layar petugas */
-  --color-text: #111827;
-  --color-text-muted: #4b5563;
-  --color-bg: #f3f4f6;
+  /* Warna merek */
+  --color-primary: #0f3a8a;          /* biru tua UNY: tombol utama, tautan */
+  --color-primary-hover: #0b2c6b;
+  --color-primary-soft: #e3ebfa;     /* latar lembut biru */
+  --color-primary-deep: #0a2350;     /* header, banner */
+  --color-accent: #f2b705;           /* kuning emas UNY: penanda aktif, sorotan */
+  --color-accent-soft: #fff4cc;
+  --color-on-accent: #1f2937;        /* teks di atas kuning (kontras cukup) */
+  --color-on-primary: #ffffff;
+
+  /* Warna netral */
+  --color-text: #0f172a;
+  --color-text-muted: #475569;
+  --color-bg: #f5f7fb;
   --color-surface: #ffffff;
-  --color-border: #d1d5db;
+  --color-border: #dbe2ee;
+  --color-neutral-soft: #e9edf3;
+
+  /* Warna status (selalu disertai teks) */
   --color-success: #166534;
   --color-success-soft: #dcfce7;
   --color-warning: #92400e;
   --color-warning-soft: #fef3c7;
   --color-danger: #b91c1c;
   --color-danger-soft: #fee2e2;
-  --color-neutral-soft: #e5e7eb;
 
   /* Tipografi */
-  --font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
-  --font-size-heading: 1.75rem;     /* 28px - judul halaman */
-  --font-size-subheading: 1.125rem; /* 18px - subjudul, judul kartu */
-  --font-size-body: 1rem;           /* 16px */
-  --font-size-label: 0.9375rem;     /* 15px - label, tombol */
-  --font-size-caption: 0.8125rem;   /* 13px - bantuan, badge, galat */
-  --line-height: 1.5;
+  --font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --font-size-display: 2.25rem;      /* 36px - judul banner beranda */
+  --font-size-heading: 1.75rem;      /* 28px - judul halaman */
+  --font-size-subheading: 1.125rem;  /* 18px - subjudul, judul kartu */
+  --font-size-body: 1rem;            /* 16px */
+  --font-size-label: 0.9375rem;      /* 15px - label, tombol */
+  --font-size-caption: 0.8125rem;    /* 13px - bantuan, badge, galat */
+  --line-height: 1.55;
 
   /* Jarak */
   --space-1: 4px;
@@ -36,14 +45,21 @@
   --space-4: 16px;
   --space-5: 24px;
   --space-6: 32px;
+  --space-7: 48px;
 
-  /* Bentuk */
-  --radius-control: 6px;   /* tombol, field */
-  --radius-card: 10px;     /* kartu, panel */
-  --radius-pill: 999px;    /* badge, chip */
-  --shadow-card: 0 1px 2px rgba(17, 24, 39, 0.08);
-  --focus-ring: 0 0 0 3px rgba(29, 78, 216, 0.35);
-  --touch-min: 44px;       /* target sentuh minimum */
+  /* Bentuk dan efek */
+  --radius-control: 10px;
+  --radius-card: 16px;
+  --radius-pill: 999px;
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.06), 0 4px 12px rgba(15, 23, 42, 0.05);
+  --shadow-hover: 0 6px 20px rgba(15, 58, 138, 0.14);
+  --focus-ring: 0 0 0 3px rgba(242, 183, 5, 0.55);
+  --transition: 160ms ease;
+  --touch-min: 44px;
 
-  --container-max: 1120px;
+  --container-max: 1160px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --transition: 0ms; }
 }

@@ -26,7 +26,7 @@
             @forelse ($items as $i)
                 <a class="list-item" href="{{ route('petugas.index', ['status' => $status, 'jenis' => $jenis, 'kode' => $i['kode']]) }}"
                     @if ($dipilih && request('kode') === $i['kode']) aria-current="true" @endif>
-                    <strong>{{ $i['kode'] }}</strong> <x-status-badge :status="$i['status']" /><br>
+                    <span class="list-item__top"><span class="kode">{{ $i['kode'] }}</span> <x-status-badge :status="$i['status']" /></span>
                     <span class="caption">{{ $i['judul'] }}</span>
                 </a>
             @empty
@@ -36,9 +36,9 @@
             @endforelse
         </section>
 
-        <section class="card" aria-label="Rincian">
+        <section class="card card--accent" aria-label="Rincian">
             @if (! $dipilih)
-                <p class="text-muted">Pilih satu baris untuk melihat rincian.</p>
+                <x-empty-state title="Pilih satu laporan atau klaim" text="Rincian, perbandingan ciri, dan tombol keputusan akan tampil di sini." icon="list" />
             @else
                 @php $b = $dipilih['barang']; $k = $dipilih['klaim'] ?? null; $menunggu = $k ? $k['status'] === 'Menunggu' : $b['status'] === 'Menunggu verifikasi'; @endphp
                 <h2>{{ $k ? 'Klaim ' . $k['kode'] : $b['kode'] }}: {{ $b['nama'] }}

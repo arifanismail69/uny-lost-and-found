@@ -1,39 +1,42 @@
 <x-layout :title="$barang['nama']" active="cari">
     <nav class="breadcrumb" aria-label="Jejak halaman">
-        <a href="{{ route('barang.cari') }}">Cari Barang</a> / {{ $barang['nama'] }}
+        <a href="{{ route('barang.cari') }}"><x-icon name="arrow-left" :size="16" /> Cari Barang</a> / {{ $barang['nama'] }}
     </nav>
 
     <div class="detail-layout">
         <div class="stack">
-            <div class="photo photo--large" aria-hidden="true">Foto barang</div>
+            <x-item-photo :kategori="$barang['kategori']" :large="true" />
             <div>
-                <h1>{{ $barang['nama'] }}</h1>
                 <x-status-badge :status="$sudahDiklaim ? 'Sudah diklaim' : 'Dapat diklaim'" />
+                <h1 style="margin-top: var(--space-2)">{{ $barang['nama'] }}</h1>
+                <p class="text-muted">{{ $barang['ciri'] }}</p>
             </div>
-            <dl class="card card--muted" style="margin: 0">
-                <dt class="caption">Kategori</dt><dd style="margin: 0 0 8px">{{ $barang['kategori'] }}</dd>
-                <dt class="caption">Ditemukan di</dt><dd style="margin: 0 0 8px">{{ $barang['lokasi'] }}</dd>
-                <dt class="caption">Tanggal ditemukan</dt><dd style="margin: 0 0 8px">{{ \Illuminate\Support\Carbon::parse($barang['tanggal'])->translatedFormat('d F Y') }}</dd>
-                <dt class="caption">Ciri umum</dt><dd style="margin: 0 0 8px">{{ $barang['ciri'] }}</dd>
-                <dt class="caption">Tempat penitipan</dt><dd style="margin: 0" class="text-muted">Ditampilkan setelah klaim disetujui</dd>
+            <dl class="card info-list">
+                <div><span class="icon-bubble"><x-icon name="tag" /></span><div><dt>Kategori</dt><dd>{{ $barang['kategori'] }}</dd></div></div>
+                <div><span class="icon-bubble"><x-icon name="pin" /></span><div><dt>Ditemukan di</dt><dd>{{ $barang['lokasi'] }}</dd></div></div>
+                <div><span class="icon-bubble"><x-icon name="calendar" /></span><div><dt>Tanggal ditemukan</dt><dd>{{ \Illuminate\Support\Carbon::parse($barang['tanggal'])->translatedFormat('d F Y') }}</dd></div></div>
+                <div><span class="icon-bubble icon-bubble--accent"><x-icon name="lock" /></span><div><dt>Tempat penitipan</dt><dd class="text-muted" style="font-weight: 400">Ditampilkan setelah klaim disetujui</dd></div></div>
             </dl>
             <x-alert type="warning">Ciri rahasia disembunyikan untuk verifikasi klaim oleh petugas.</x-alert>
         </div>
 
-        <section class="card" aria-labelledby="judul-klaim">
+        <section class="card card--accent sticky-panel" aria-labelledby="judul-klaim">
             <h2 id="judul-klaim">Ajukan Klaim</h2>
+            <ol class="mini-steps" aria-label="Langkah klaim">
+                <li class="is-current">1. Isi bukti</li><li>2. Diperiksa petugas</li><li>3. Ambil barang</li>
+            </ol>
             @if ($sudahDiklaim)
                 <x-alert type="danger">Barang sudah diklaim. Klaim baru tidak dapat diajukan.</x-alert>
                 <x-button :disabled="true" block>Barang sudah diklaim</x-button>
             @else
-                <p class="text-muted">Jelaskan ciri yang hanya diketahui pemilik barang.</p>
+                <p class="text-muted">Jelaskan ciri yang hanya diketahui pemilik barang. Semakin spesifik, semakin cepat petugas memutuskan.</p>
                 @if ($errors->any())
                     <x-alert type="danger" role="alert">Periksa kembali isian yang ditandai merah.</x-alert>
                 @endif
                 <form method="POST" action="{{ route('barang.klaim', $barang['kode']) }}" novalidate>
                     @csrf
                     <x-form-field name="bukti" label="Ciri pembuktian" type="textarea" required
-                        placeholder="Contoh: isi dompet, bekas goresan, foto di kartu" />
+                        placeholder="Contoh: isi dompet, bekas goresan, foto di kartu" hint="Minimal 10 karakter." />
                     <x-form-field name="catatan" label="Catatan tambahan (opsional)" type="textarea" :rows="2" />
                     <div class="actions">
                         <x-button type="submit">Kirim Klaim</x-button>
