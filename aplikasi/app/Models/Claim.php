@@ -10,6 +10,7 @@ class Claim extends Model
 {
     public const STATUS = ['Menunggu', 'Disetujui', 'Ditolak'];
 
+    // user_id sengaja tidak fillable: diisi controller dari pengguna yang login, bukan dari form
     protected $fillable = ['report_id', 'pengklaim', 'bukti', 'catatan', 'status', 'alasan'];
 
     /** Relasi kebalikan: setiap klaim milik satu laporan barang. */
@@ -18,13 +19,19 @@ class Claim extends Model
         return $this->belongsTo(Report::class);
     }
 
+    /** Pemilik klaim (1 user : N claims). */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     protected function kode(): Attribute
     {
         return Attribute::get(fn () => 'KL-' . str_pad((string) $this->id, 3, '0', STR_PAD_LEFT));
     }
 
-    /** Pengklaim hanya boleh mengubah/membatalkan klaim yang masih menunggu. */
-    public function bisaDiubahPengklaim(): bool
+    /** Klaim masih menunggu keputusan petugas (pemilik masih boleh mengubah, lihat ClaimPolicy). */
+    public function masihMenunggu(): bool
     {
         return $this->status === 'Menunggu';
     }

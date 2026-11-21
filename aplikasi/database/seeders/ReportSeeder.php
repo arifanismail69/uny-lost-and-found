@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Claim;
 use App\Models\Report;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 /** Data awal laporan dan klaim (dipindahkan dari data contoh Pertemuan 4). */
@@ -24,12 +25,16 @@ class ReportSeeder extends Seeder
             ['Hilang', 'Tas ransel biru', 'Tas', 'Gedung Kuliah Bersama', '2026-11-08', 'Biru dongker, ada gantungan.', 'Buku catatan bertanda nama.', null, 'Terverifikasi', null, 'Dina'],
         ];
 
+        // Pemilik dicari berdasarkan nama akun dari UserSeeder (null jika akun belum ada)
+        $idUser = User::pluck('id', 'name');
+
         $r = [];
         foreach ($laporan as $i => $l) {
             $r[$i + 1] = Report::create(array_combine(
                 ['jenis', 'nama', 'kategori', 'lokasi', 'tanggal', 'ciri', 'ciri_rahasia', 'dititipkan_di', 'status', 'alasan', 'pelapor'],
                 $l,
             ));
+            $r[$i + 1]->forceFill(['user_id' => $idUser[$l[10]] ?? null])->save();
         }
 
         $klaim = [
@@ -44,7 +49,7 @@ class ReportSeeder extends Seeder
             Claim::create([
                 'report_id' => $r[$laporanKe]->id, 'pengklaim' => $pengklaim, 'bukti' => $bukti,
                 'status' => $status, 'alasan' => $alasan,
-            ]);
+            ])->forceFill(['user_id' => $idUser[$pengklaim] ?? null])->save();
         }
     }
 }

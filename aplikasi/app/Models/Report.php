@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Report extends Model
@@ -28,6 +29,12 @@ class Report extends Model
     protected function casts(): array
     {
         return ['tanggal' => 'date'];
+    }
+
+    /** Pemilik laporan (user_id). Tidak termasuk fillable: diisi controller dari pengguna yang login. */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /** Relasi one-to-many: satu laporan memiliki banyak klaim. */
@@ -63,8 +70,8 @@ class Report extends Model
         return $this->claims()->where('status', 'Disetujui')->exists();
     }
 
-    /** Pelapor hanya boleh mengubah/menghapus laporan selama belum diverifikasi (US-11). */
-    public function bisaDiubahPelapor(): bool
+    /** Laporan masih menunggu verifikasi (pelapor masih boleh mengubah, lihat ReportPolicy). */
+    public function masihMenunggu(): bool
     {
         return $this->status === 'Menunggu verifikasi';
     }
