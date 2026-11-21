@@ -13,7 +13,7 @@ Lingkungan: Laravel 13, PHP 8.5, `php artisan serve`. Diuji pada lebar desktop (
 | 7 | Tombol dan field memiliki label yang jelas | Sudah | Semua field memakai `<label for>`; tombol berlabel kata kerja |
 | 8 | Kontras teks dan latar dapat dibaca | Sudah | Diukur di browser dengan rumus WCAG: semua pasangan utama 7.07-12.10 : 1 (lihat `01-design-tokens.md`) |
 | 9 | Kode komponen tidak diduplikasi tanpa alasan | Sudah | 8 komponen Blade, lihat `02-component-inventory.md` |
-| 10 | Perubahan sudah di-commit dan didorong ke repositori | Belum | Dilakukan pemilik proyek pada branch `feature/ui-pertemuan-4` |
+| 10 | Perubahan sudah di-commit dan didorong ke repositori | Sudah | Branch `feature/ui-pertemuan-4` dan `feature/ui-nuansa-uny`, digabung ke `main` lewat PR #1 dan #2 |
 
 ## Skenario uji
 

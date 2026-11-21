@@ -55,8 +55,8 @@ Pertemuan04/              dokumen pengumpulan (folder ini)
 |---|---|
 | 01-design-tokens.md | Selesai |
 | 02-component-inventory.md | Selesai |
-| 03-ui-screenshots.pdf | **Belum** - ambil sendiri (lihat di bawah) |
-| 04-test-checklist.md | Selesai (item 10 menunggu commit) |
+| 03-ui-screenshots.pdf | Selesai |
+| 04-test-checklist.md | Selesai |
 | 05-keputusan-implementasi.md | Selesai |
 
 ## Tangkapan layar yang perlu diambil untuk 03-ui-screenshots.pdf
