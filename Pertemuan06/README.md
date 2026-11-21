@@ -58,7 +58,7 @@ Pakai dua browser (atau satu biasa dan satu incognito) agar akun petugas dan pen
 ## Catatan
 
 - Database masih SQLite (lihat `Pertemuan05/README.md` untuk pindah ke MySQL).
-- `composer audit` melaporkan 8 peringatan keamanan pada `laravel/framework` 13.36 dan beberapa paket Symfony (sudah ada sejak instalasi awal). Perbaikannya: `composer update` paket terkait; belum dilakukan di pertemuan ini.
+- `composer audit` sempat melaporkan 8 peringatan keamanan pada `laravel/framework` 13.36 dan beberapa paket Symfony (sudah ada sejak instalasi awal). Sudah diperbaiki dengan memperbarui ke Laravel 13.43.0 dan Symfony 8.1.10/8.1.11 (PR #5); audit kini bersih dan 58 test tetap lulus. Setelah menarik perubahan, jalankan `composer install`.
 
 ## Kontribusi
 
