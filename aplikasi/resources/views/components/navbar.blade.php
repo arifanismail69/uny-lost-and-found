@@ -1,7 +1,7 @@
 @props(['active' => '', 'admin' => false])
 @php
     $menu = $admin
-        ? [['petugas', 'Laporan dan Klaim', route('petugas.index'), 'list']]
+        ? [['petugas', 'Laporan dan Klaim', route('petugas.index'), 'list'], ['kelola', 'Kelola Laporan', route('laporan.index'), 'box']]
         : [
             ['beranda', 'Beranda', route('beranda'), 'home'],
             ['cari', 'Cari Barang', route('barang.cari'), 'search'],

@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Support\DemoData;
+use App\Models\Claim;
+use App\Models\Report;
+use App\Support\PenggunaSimulasi;
 
 class RiwayatController extends Controller
 {
-    /** H-06 Riwayat (US-06). Pengguna simulasi: "dina". */
+    /** H-06 Riwayat (US-06): laporan dan klaim milik pengguna, nama barang dibaca lewat relasi */
     public function __invoke()
     {
-        $laporan = array_values(array_filter(DemoData::reports(), fn ($r) => $r['pelapor'] === 'dina'));
-        $klaim = array_map(function ($c) {
-            $c['barang'] = DemoData::report($c['report_kode']);
-
-            return $c;
-        }, array_values(array_filter(DemoData::claims(), fn ($c) => $c['pemilik'] === 'dina')));
-
-        return view('pages.riwayat', compact('laporan', 'klaim'));
+        return view('pages.riwayat', [
+            'laporan' => Report::where('pelapor', PenggunaSimulasi::NAMA)->latest()->get(),
+            'klaim' => Claim::with('report')->where('pengklaim', PenggunaSimulasi::NAMA)->latest()->get(),
+        ]);
     }
 }

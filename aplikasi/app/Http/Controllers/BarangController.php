@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Support\DemoData;
+use App\Models\Report;
 use Illuminate\Http\Request;
 
+/** Halaman publik barang temuan: beranda, pencarian, detail. */
 class BarangController extends Controller
 {
     /** H-02 Beranda / Cari */
     public function beranda()
     {
         return view('pages.beranda', [
-            'terbaru' => array_slice(DemoData::publik(), 0, 4),
-            'kategori' => DemoData::KATEGORI,
-            'lokasi' => DemoData::LOKASI,
+            'terbaru' => Report::publik()->with('claims')->latest('tanggal')->take(4)->get(),
+            'kategori' => Report::KATEGORI,
+            'lokasi' => Report::LOKASI,
         ]);
     }
 
@@ -22,60 +23,34 @@ class BarangController extends Controller
     {
         $filter = $request->validate([
             'q' => ['nullable', 'string', 'max:100'],
-            'kategori' => ['nullable', 'in:' . implode(',', DemoData::KATEGORI)],
-            'lokasi' => ['nullable', 'in:' . implode(',', DemoData::LOKASI)],
+            'kategori' => ['nullable', 'in:' . implode(',', Report::KATEGORI)],
+            'lokasi' => ['nullable', 'in:' . implode(',', Report::LOKASI)],
             'sejak' => ['nullable', 'date'],
         ]);
 
-        $hasil = array_filter(DemoData::publik(), function ($r) use ($filter) {
-            $teks = mb_strtolower($r['nama'] . ' ' . $r['ciri'] . ' ' . $r['kategori']);
-
-            return (empty($filter['q']) || str_contains($teks, mb_strtolower($filter['q'])))
-                && (empty($filter['kategori']) || $r['kategori'] === $filter['kategori'])
-                && (empty($filter['lokasi']) || $r['lokasi'] === $filter['lokasi'])
-                && (empty($filter['sejak']) || $r['tanggal'] >= $filter['sejak']);
-        });
-
-        // Barang yang masih dapat diklaim ditampilkan lebih dulu (temuan walkthrough P3 no. 4)
-        usort($hasil, fn ($a, $b) => DemoData::sudahDiklaim($a['kode']) <=> DemoData::sudahDiklaim($b['kode']));
+        $hasil = Report::publik()->with('claims')
+            ->when($filter['q'] ?? null, fn ($q, $kata) => $q->where(fn ($w) => $w
+                ->where('nama', 'like', "%{$kata}%")->orWhere('ciri', 'like', "%{$kata}%")->orWhere('kategori', 'like', "%{$kata}%")))
+            ->when($filter['kategori'] ?? null, fn ($q, $v) => $q->where('kategori', $v))
+            ->when($filter['lokasi'] ?? null, fn ($q, $v) => $q->where('lokasi', $v))
+            ->when($filter['sejak'] ?? null, fn ($q, $v) => $q->whereDate('tanggal', '>=', $v))
+            ->latest('tanggal')
+            ->get()
+            // barang yang masih bisa diklaim tampil lebih dulu (temuan walkthrough P3)
+            ->sortBy(fn (Report $r) => $r->sudahDiklaim() ? 1 : 0)
+            ->values();
 
         return view('pages.hasil', ['hasil' => $hasil, 'filter' => array_filter($filter)]);
     }
 
-    /** H-04 Detail Barang + panel klaim (AC-04.4, AC-05.3) */
-    public function show(string $kode)
+    /** H-04 Detail Barang berdasarkan ID + panel klaim (AC-04.4, AC-05.3) */
+    public function show(Report $report)
     {
-        $barang = DemoData::report($kode);
-        $publik = $barang && $barang['jenis'] === 'Temuan' && $barang['status'] === 'Terverifikasi';
-
-        if (! $publik) {
-            abort(404);
-        }
+        abort_unless($report->isPublik(), 404);
 
         return view('pages.detail', [
-            'barang' => $barang,
-            'sudahDiklaim' => DemoData::sudahDiklaim($kode),
+            'barang' => $report,
+            'sudahDiklaim' => $report->sudahDiklaim(),
         ]);
-    }
-
-    /** Kirim klaim (simulasi): validasi bukti, lalu ke Riwayat (AC-05.1, AC-05.2) */
-    public function klaim(Request $request, string $kode)
-    {
-        abort_unless(DemoData::report($kode), 404);
-
-        if (DemoData::sudahDiklaim($kode)) {
-            return back()->withErrors(['bukti' => 'Barang sudah diklaim. Klaim baru tidak dapat diajukan.']);
-        }
-
-        $request->validate([
-            'bukti' => ['required', 'string', 'min:10', 'max:1000'],
-            'catatan' => ['nullable', 'string', 'max:500'],
-        ], [
-            'bukti.required' => 'Ciri pembuktian wajib diisi.',
-            'bukti.min' => 'Jelaskan ciri pembuktian minimal 10 karakter.',
-        ]);
-
-        return redirect()->route('riwayat')
-            ->with('sukses', 'Klaim untuk barang ' . $kode . ' terkirim dengan status Menunggu (simulasi, belum tersimpan).');
     }
 }
