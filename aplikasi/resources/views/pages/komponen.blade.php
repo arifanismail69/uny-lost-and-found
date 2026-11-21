@@ -39,9 +39,9 @@
         <section>
             <h2>Item card (normal, terpilih, sudah diklaim)</h2>
             <div class="grid grid--3">
-                <x-item-card :item="\App\Support\DemoData::report('LP-002')" />
-                <x-item-card :item="\App\Support\DemoData::report('LP-001')" :selected="true" />
-                <x-item-card :item="\App\Support\DemoData::report('LP-006')" />
+                <x-item-card :item="\App\Models\Report::find(2)" />
+                <x-item-card :item="\App\Models\Report::find(1)" :selected="true" />
+                <x-item-card :item="\App\Models\Report::find(6)" />
             </div>
         </section>
 
