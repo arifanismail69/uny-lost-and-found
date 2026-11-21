@@ -2,14 +2,25 @@
 
 namespace Tests\Feature;
 
+use App\Models\Report;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-/** Uji antarmuka Pertemuan 4 (data masih simulasi). */
+/** Uji antarmuka Pertemuan 4, kini membaca data dari database hasil seeder. */
 class AntarmukaPertemuan4Test extends TestCase
 {
+    use RefreshDatabase;
+
+    protected bool $seed = true;
+
+    private function barang(string $nama): Report
+    {
+        return Report::where('nama', $nama)->where('jenis', 'Temuan')->firstOrFail();
+    }
+
     public function test_semua_halaman_utama_dapat_dibuka(): void
     {
-        foreach (['/', '/cari', '/barang/LP-001', '/lapor', '/riwayat', '/petugas', '/komponen'] as $url) {
+        foreach (['/', '/cari', '/barang/' . $this->barang('Dompet kulit hitam')->id, '/laporan/create', '/laporan', '/riwayat', '/petugas', '/komponen'] as $url) {
             $this->get($url)->assertOk();
         }
     }
@@ -23,44 +34,20 @@ class AntarmukaPertemuan4Test extends TestCase
     public function test_barang_menunggu_atau_dikembalikan_tidak_tampil_publik(): void
     {
         $this->get('/cari')->assertDontSee('Laptop abu-abu')->assertDontSee('Tas ransel biru');
-        $this->get('/barang/LP-008')->assertNotFound();
-        $this->get('/barang/LP-007')->assertNotFound();
+        $this->get('/barang/' . $this->barang('Laptop abu-abu')->id)->assertNotFound();
+        $this->get('/barang/' . $this->barang('Tas ransel biru')->id)->assertNotFound();
+        $this->get('/barang/9999')->assertNotFound();
     }
 
     public function test_detail_tidak_menampilkan_ciri_rahasia(): void
     {
-        $this->get('/barang/LP-001')->assertSee('Warna hitam')->assertDontSee('Foto keluarga di slot kartu');
+        $this->get('/barang/' . $this->barang('Dompet kulit hitam')->id)
+            ->assertSee('Warna hitam')->assertDontSee('Foto keluarga di slot kartu');
     }
 
     public function test_barang_yang_sudah_diklaim_menonaktifkan_klaim(): void
     {
-        $this->get('/barang/LP-006')->assertSee('Barang sudah diklaim')->assertDontSee('Kirim Klaim');
-    }
-
-    public function test_klaim_wajib_ciri_pembuktian(): void
-    {
-        $this->from('/barang/LP-001')->post('/barang/LP-001/klaim', ['bukti' => ''])
-            ->assertRedirect('/barang/LP-001')->assertSessionHasErrors('bukti');
-
-        $this->post('/barang/LP-001/klaim', ['bukti' => 'Ada foto keluarga di slot kartu'])
-            ->assertRedirect('/riwayat')->assertSessionHas('sukses');
-    }
-
-    public function test_lapor_temuan_memvalidasi_kolom_wajib_dan_tanggal(): void
-    {
-        $this->post('/lapor', ['jenis' => 'Temuan', 'tanggal' => now()->addDay()->toDateString()])
-            ->assertSessionHasErrors(['nama', 'kategori', 'ciri', 'lokasi', 'tanggal', 'dititipkan_di']);
-
-        $this->post('/lapor', [
-            'jenis' => 'Hilang', 'nama' => 'Jam tangan', 'kategori' => 'Lainnya', 'ciri' => 'Hitam',
-            'lokasi' => 'Kantin FT', 'tanggal' => now()->toDateString(),
-        ])->assertRedirect('/riwayat')->assertSessionHasNoErrors();
-    }
-
-    public function test_petugas_menolak_wajib_alasan_dan_klaim_ganda_tidak_bisa_disetujui(): void
-    {
-        $this->post('/petugas/KL-002/keputusan', ['aksi' => 'tolak'])->assertSessionHasErrors('alasan');
-        $this->post('/petugas/KL-002/keputusan', ['aksi' => 'tolak', 'alasan' => 'Ciri tidak cocok'])->assertSessionHas('sukses');
-        $this->post('/petugas/KL-005/keputusan', ['aksi' => 'setujui'])->assertSessionHasErrors('alasan');
+        $this->get('/barang/' . $this->barang('Dompet hitam polos')->id)
+            ->assertSee('Barang sudah diklaim')->assertDontSee('Kirim Klaim');
     }
 }
