@@ -27,7 +27,7 @@
                                 <td data-label="Status"><x-status-badge :status="$r->status" /></td>
                                 <td class="text-muted" data-label="Keterangan">{{ $r->alasan ? 'Alasan: ' . $r->alasan : '-' }}</td>
                                 <td data-label="Aksi">
-                                    @if ($r->bisaDiubahPelapor())
+                                    @can('update', $r)
                                         <div class="actions" style="margin-top: 0; flex-wrap: nowrap">
                                             <x-button variant="secondary" :href="route('laporan.edit', $r)">Ubah</x-button>
                                             <form method="POST" action="{{ route('laporan.destroy', $r) }}" onsubmit="return confirm('Hapus laporan {{ $r->kode }}? Tindakan ini tidak dapat dibatalkan.')">
@@ -37,7 +37,7 @@
                                         </div>
                                     @else
                                         <span class="caption">Terkunci setelah diputuskan</span>
-                                    @endif
+                                    @endcan
                                 </td>
                             </tr>
                         @endforeach
@@ -75,7 +75,7 @@
                                     @endif
                                 </td>
                                 <td data-label="Aksi">
-                                    @if ($c->bisaDiubahPengklaim())
+                                    @can('update', $c)
                                         <div class="actions" style="margin-top: 0; flex-wrap: nowrap">
                                             <x-button variant="secondary" :href="route('klaim.edit', $c)">Ubah</x-button>
                                             <form method="POST" action="{{ route('klaim.destroy', $c) }}" onsubmit="return confirm('Batalkan klaim {{ $c->kode }}?')">
@@ -85,7 +85,7 @@
                                         </div>
                                     @else
                                         <span class="caption">-</span>
-                                    @endif
+                                    @endcan
                                 </td>
                             </tr>
                         @endforeach

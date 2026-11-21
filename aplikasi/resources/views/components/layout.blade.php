@@ -16,7 +16,7 @@
 <body>
     <a class="skip-link" href="#konten">Lewati ke konten</a>
 
-    <x-navbar :active="$active" :admin="$admin" />
+    <x-navbar :active="$active" />
 
     {{ $hero ?? '' }}
 

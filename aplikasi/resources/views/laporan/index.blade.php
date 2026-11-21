@@ -35,8 +35,8 @@
                             <td data-label="Klaim">{{ $r->claims_count }}</td>
                             <td data-label="Aksi">
                                 <div class="actions" style="margin-top: 0; flex-wrap: nowrap">
-                                    <x-button variant="secondary" :href="route('laporan.edit', [$r, 'petugas' => 1])">Ubah</x-button>
-                                    <form method="POST" action="{{ route('laporan.destroy', [$r, 'petugas' => 1]) }}"
+                                    <x-button variant="secondary" :href="route('laporan.edit', $r)">Ubah</x-button>
+                                    <form method="POST" action="{{ route('laporan.destroy', $r) }}"
                                         onsubmit="return confirm('Hapus laporan {{ $r->kode }} beserta {{ $r->claims_count }} klaimnya? Tindakan ini tidak dapat dibatalkan.')">
                                         @csrf @method('DELETE')
                                         <x-button type="submit" variant="danger">Hapus</x-button>

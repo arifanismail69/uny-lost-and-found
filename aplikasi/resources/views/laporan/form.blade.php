@@ -1,8 +1,8 @@
 {{-- Form laporan: dipakai untuk CREATE (laporan.create) dan UPDATE (laporan.edit) --}}
 @php
     $ubah = $report->exists;
-    $petugas = $dariPetugas ?? false;
-    $aksi = $ubah ? route('laporan.update', [$report, 'petugas' => $petugas ? 1 : null]) : route('laporan.store');
+    $petugas = auth()->user()->isAdmin();
+    $aksi = $ubah ? route('laporan.update', $report) : route('laporan.store');
 @endphp
 <x-layout :title="$ubah ? 'Ubah Laporan' : 'Lapor Barang'" :active="$petugas ? 'kelola' : 'lapor'" :admin="$petugas">
     <div class="form-narrow">
