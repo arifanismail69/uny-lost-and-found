@@ -138,3 +138,12 @@ textarea.field__control { min-height: 104px; resize: vertical; }
 .compare .card { border-top: 3px solid var(--color-primary); }
 .compare .card + .card { border-top-color: var(--color-accent); }
 @media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
+
+/* ---------- Pertemuan 6: autentikasi ---------- */
+.auth-card { max-width: 460px; margin: 0 auto; }
+.auth-card details summary { cursor: pointer; }
+.btn--small { min-height: 34px; padding: 0 var(--space-3); font-size: var(--font-size-caption); }
+.link-button { background: none; border: 0; padding: 0; font: inherit; color: var(--color-accent); font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.stat-card { display: flex; flex-direction: column; gap: var(--space-2); text-decoration: none; color: var(--color-text); transition: transform var(--transition), box-shadow var(--transition); }
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.stat-card__angka { font-size: 2rem; font-weight: 800; color: var(--color-primary); line-height: 1; }

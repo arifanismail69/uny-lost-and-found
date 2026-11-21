@@ -53,7 +53,6 @@
   .search-bar .btn { grid-column: 1 / -1; }
   .detail-layout, .master-detail { grid-template-columns: minmax(0, 1fr); }
   .sticky-panel { position: static; }
-  .user-chip { display: none; }
 }
 
 /* Mobile: satu kolom, navigasi bawah, tombol utama lebar penuh */
@@ -68,3 +67,12 @@
   .actions .btn { width: 100%; }
   .section-head { flex-direction: column; align-items: start; }
 }
+
+/* ---------- Pertemuan 6: menu akun ---------- */
+.user-chip form { display: inline; margin: 0; }
+.user-chip__nama { display: inline-flex; align-items: center; gap: 6px; color: #fff !important; text-decoration: none; }
+.user-chip a[aria-current="page"] { text-decoration: underline; }
+@media (max-width: 960px) {
+  .user-chip { display: inline-flex; flex-wrap: wrap; gap: var(--space-3); width: 100%; justify-content: flex-end; padding-bottom: var(--space-2); }
+}
+.user-chip a.btn--accent { color: var(--color-on-accent); text-decoration: none; }

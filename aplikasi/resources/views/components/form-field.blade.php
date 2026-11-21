@@ -3,11 +3,12 @@
 @props([
     'name', 'label', 'type' => 'text', 'options' => [], 'placeholder' => null,
     'required' => false, 'hint' => null, 'value' => null, 'rows' => 4, 'error' => null,
+    'bag' => 'default', 'id' => null,
 ])
 @php
-    $id = 'f-' . $name;
+    $id = $id ?? 'f-' . $name;
     $current = old($name, $value);
-    $errorMessage = $error ?? $errors->first($name);
+    $errorMessage = $error ?? $errors->getBag($bag)->first($name);
     $hasError = $errorMessage !== '' && $errorMessage !== null;
     $describedBy = trim(($hint ? $id . '-hint ' : '') . ($hasError ? $id . '-error' : ''));
 @endphp

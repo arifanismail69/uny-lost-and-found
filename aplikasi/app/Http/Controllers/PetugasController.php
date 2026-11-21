@@ -6,13 +6,16 @@ use App\Models\Claim;
 use App\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 /** H-07 Laporan dan Klaim (petugas), pola master-detail (US-07, US-08, US-09, US-10) */
 class PetugasController extends Controller
 {
     public function index(Request $request)
     {
-        $status = $request->query('status', 'Menunggu');
+        // "semua" dipakai sebagai nilai eksplisit: nilai kosong diubah Laravel menjadi null dan jatuh ke default
+        $status = $request->query('status') ?: 'Menunggu';
+        $status = $status === 'semua' ? '' : $status;
         $jenis = $request->query('jenis', '');
 
         $items = collect();
@@ -41,6 +44,7 @@ class PetugasController extends Controller
     /** UPDATE status laporan: verifikasi atau tolak (AC-08.1, AC-08.2) */
     public function putuskanLaporan(Request $request, Report $report)
     {
+        Gate::authorize('review', $report);
         $data = $this->validasiKeputusan($request);
         abort_unless($report->status === 'Menunggu verifikasi', 422, 'Laporan ini sudah diputuskan.');
 
@@ -54,6 +58,7 @@ class PetugasController extends Controller
     /** UPDATE status klaim dengan aturan "satu klaim disetujui per barang" (AC-09.1 s.d. AC-09.3) */
     public function putuskanKlaim(Request $request, Claim $claim)
     {
+        Gate::authorize('review', $claim);
         $data = $this->validasiKeputusan($request);
         abort_unless($claim->status === 'Menunggu', 422, 'Klaim ini sudah diputuskan.');
 
@@ -84,6 +89,7 @@ class PetugasController extends Controller
     /** UPDATE: catat serah terima, barang berstatus Dikembalikan (US-10) */
     public function serahTerima(Claim $claim)
     {
+        Gate::authorize('review', $claim);
         abort_unless($claim->status === 'Disetujui', 422, 'Hanya klaim yang disetujui yang dapat diserahterimakan.');
         $claim->report->update(['status' => 'Dikembalikan']);
 

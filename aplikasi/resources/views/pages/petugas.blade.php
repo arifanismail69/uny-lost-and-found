@@ -11,7 +11,7 @@
                     <label class="field__label" for="f-status">Status</label>
                     <select id="f-status" name="status" class="field__control" onchange="this.form.submit()">
                         @foreach (['Menunggu', 'Terverifikasi', 'Disetujui', 'Ditolak', 'Dikembalikan', ''] as $s)
-                            <option value="{{ $s }}" @selected($status === $s)>{{ $s ?: 'Semua' }}</option>
+                            <option value="{{ $s ?: 'semua' }}" @selected($status === $s)>{{ $s ?: 'Semua' }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -27,14 +27,14 @@
             </form>
 
             @forelse ($items as $i)
-                <a class="list-item" href="{{ route('petugas.index', ['status' => $status, 'jenis' => $jenis, 'kode' => $i['kode']]) }}"
+                <a class="list-item" href="{{ route('petugas.index', ['status' => $status ?: 'semua', 'jenis' => $jenis, 'kode' => $i['kode']]) }}"
                     @if (request('kode') === $i['kode']) aria-current="true" @endif>
                     <span class="list-item__top"><span class="kode">{{ $i['kode'] }}</span> <x-status-badge :status="$i['status']" /></span>
                     <span class="caption">{{ $i['judul'] }}</span>
                 </a>
             @empty
                 <x-empty-state title="Tidak ada laporan sesuai filter">
-                    <x-button variant="secondary" :href="route('petugas.index', ['status' => ''])">Hapus filter</x-button>
+                    <x-button variant="secondary" :href="route('petugas.index', ['status' => 'semua'])">Hapus filter</x-button>
                 </x-empty-state>
             @endforelse
         </section>

@@ -28,6 +28,12 @@
             @if ($sudahDiklaim)
                 <x-alert type="danger">Barang sudah diklaim. Klaim baru tidak dapat diajukan.</x-alert>
                 <x-button :disabled="true" block>Barang sudah diklaim</x-button>
+            @elseif (! auth()->check())
+                <p class="text-muted">Masuk dulu untuk mengajukan klaim, agar klaimmu tercatat atas nama akunmu dan statusnya bisa dipantau.</p>
+                <x-button :href="route('login')" block><x-icon name="user" :size="18" /> Masuk untuk mengajukan klaim</x-button>
+                <p class="caption" style="margin-top: var(--space-3)">Belum punya akun? <a href="{{ route('register') }}">Daftar</a></p>
+            @elseif (auth()->user()->cannot('create', \App\Models\Claim::class))
+                <x-alert type="warning">Akun petugas tidak dapat mengajukan klaim. Klaim ditinjau dari menu Laporan dan Klaim.</x-alert>
             @else
                 <p class="text-muted">Jelaskan ciri yang hanya diketahui pemilik barang. Semakin spesifik, semakin cepat petugas memutuskan.</p>
                 @if ($errors->any())

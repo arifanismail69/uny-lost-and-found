@@ -6,9 +6,12 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /** Isi data awal aplikasi: php artisan db:seed */
+    /** Isi data awal: php artisan migrate:fresh --seed */
     public function run(): void
     {
-        $this->call(ReportSeeder::class);
+        $this->call([
+            UserSeeder::class,   // akun harus ada lebih dulu agar laporan/klaim punya pemilik
+            ReportSeeder::class,
+        ]);
     }
 }
