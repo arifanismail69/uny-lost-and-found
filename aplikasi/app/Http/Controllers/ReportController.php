@@ -3,19 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Report;
-use App\Support\PenggunaSimulasi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 /**
- * CRUD laporan barang (padanan CRUD Ruang pada modul).
- * index = kelola laporan (petugas); create/store/edit/update/destroy = pelapor dan petugas.
+ * CRUD laporan barang. Akses area diatur middleware di routes/web.php,
+ * akses per data diatur ReportPolicy lewat Gate::authorize().
  */
 class ReportController extends Controller
 {
-    /** READ: daftar semua laporan dari database */
+    /** READ: semua laporan (Kelola Laporan, khusus admin) */
     public function index(Request $request)
     {
-        $reports = Report::withCount('claims')
+        Gate::authorize('viewAny', Report::class);
+
+        $reports = Report::with('user')->withCount('claims')
             ->when($request->query('jenis'), fn ($q, $v) => $q->where('jenis', $v))
             ->when($request->query('status'), fn ($q, $v) => $q->where('status', $v))
             ->latest()
@@ -28,56 +30,62 @@ class ReportController extends Controller
         ]);
     }
 
-    /** CREATE (form) - H-05 Form Lapor Barang */
+    /** CREATE (form) */
     public function create(Request $request)
     {
+        Gate::authorize('create', Report::class);
+
         return view('laporan.form', [
             'report' => new Report(['jenis' => $request->query('jenis') === 'Hilang' ? 'Hilang' : 'Temuan']),
         ]);
     }
 
-    /** CREATE (simpan) */
+    /** CREATE (simpan): pemilik diambil dari pengguna yang login, bukan dari form */
     public function store(Request $request)
     {
-        $data = $this->validasi($request);
-        $data['pelapor'] = PenggunaSimulasi::NAMA;
-        $data['status'] = 'Menunggu verifikasi';
+        Gate::authorize('create', Report::class);
 
-        $report = Report::create($data);
+        $report = new Report($this->validasi($request) + [
+            'pelapor' => $request->user()->name,
+            'status' => 'Menunggu verifikasi',
+        ]);
+        $report->user()->associate($request->user());
+        $report->save();
 
         return redirect()->route('riwayat')
             ->with('sukses', "Laporan {$report->kode} tersimpan dengan status Menunggu verifikasi.");
     }
 
     /** UPDATE (form) */
-    public function edit(Request $request, Report $report)
+    public function edit(Report $report)
     {
-        $this->pastikanBolehUbah($request, $report);
+        Gate::authorize('update', $report);
 
-        return view('laporan.form', ['report' => $report, 'dariPetugas' => $request->boolean('petugas')]);
+        return view('laporan.form', ['report' => $report]);
     }
 
     /** UPDATE (simpan) */
     public function update(Request $request, Report $report)
     {
-        $this->pastikanBolehUbah($request, $report);
+        Gate::authorize('update', $report);
         $report->update($this->validasi($request));
 
-        return $request->boolean('petugas')
-            ? redirect()->route('laporan.index')->with('sukses', "Laporan {$report->kode} diperbarui.")
-            : redirect()->route('riwayat')->with('sukses', "Laporan {$report->kode} diperbarui.");
+        return $this->kembali($request, "Laporan {$report->kode} diperbarui.");
     }
 
     /** DELETE */
     public function destroy(Request $request, Report $report)
     {
-        $this->pastikanBolehUbah($request, $report);
+        Gate::authorize('delete', $report);
         $kode = $report->kode;
         $report->delete(); // klaim terkait ikut terhapus (cascadeOnDelete)
 
-        return $request->boolean('petugas')
-            ? redirect()->route('laporan.index')->with('sukses', "Laporan {$kode} dihapus.")
-            : redirect()->route('riwayat')->with('sukses', "Laporan {$kode} dihapus.");
+        return $this->kembali($request, "Laporan {$kode} dihapus.");
+    }
+
+    private function kembali(Request $request, string $pesan)
+    {
+        return redirect()->route($request->user()->isAdmin() ? 'laporan.index' : 'riwayat')->with('sukses', $pesan);
     }
 
     private function validasi(Request $request): array
@@ -104,22 +112,11 @@ class ReportController extends Controller
             'lokasi' => 'Lokasi', 'tanggal' => 'Tanggal', 'jenis' => 'Jenis laporan',
         ]);
 
-        unset($data['foto']); // penyimpanan berkas foto belum dibuat (lihat dokumen keputusan)
+        unset($data['foto']); // penyimpanan berkas foto belum dibuat
         if ($data['jenis'] === 'Hilang') {
             $data['dititipkan_di'] = null;
         }
 
         return $data;
-    }
-
-    /** Pelapor hanya boleh mengubah laporannya sendiri selama belum diverifikasi; petugas boleh selalu. */
-    private function pastikanBolehUbah(Request $request, Report $report): void
-    {
-        if ($request->boolean('petugas')) {
-            return; // hak akses petugas dibatasi dengan login pada Pertemuan 6
-        }
-
-        abort_unless($report->pelapor === PenggunaSimulasi::NAMA && $report->bisaDiubahPelapor(), 403,
-            'Laporan ini tidak dapat diubah lagi.');
     }
 }
